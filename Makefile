@@ -232,6 +232,7 @@ uninstall: manifests kustomize ## Uninstall CRDs from the K8s cluster specified 
 
 .PHONY: deploy
 deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in ~/.kube/config.
+	$(KUBECTL) create namespace trainer-operator-system --dry-run=client -o yaml | $(KUBECTL) apply -f -
 	@tmp="$$(mktemp -d)"; [ -n "$$tmp" ] || { echo "mktemp failed"; exit 1; }; trap 'rm -rf "$$tmp"' EXIT; \
 		cp -r config "$$tmp/config"; \
 		cd "$$tmp" && sed -i 's|TRAINER_OPERATOR_IMAGE=.*|TRAINER_OPERATOR_IMAGE=$(IMG)|' config/default/params.env && \
